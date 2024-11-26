@@ -3,62 +3,53 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Options;
-using Microsoft.Identity.Client;
+using Bibliotec.Models;
 
 namespace Bibliotec.Contexts
-{   
-    
-    //Classe que tera as informacoes do banco de dados 
-
+{
+    // Classe Context herda de DbContext para gerenciar a interação com o banco de dados.
     public class Context : DbContext
     {
-        
-
-        //criar um metodo cronstrutor
-
         public Context()
         {
-            
+
+        }
+        // Construtor que permite configurar o DbContext com opções fornecidas externamente.
+        public Context(DbContextOptions<Context> options) : base(options)
+        {
+
         }
 
-        public Context( DbContextOptions<Context> Options) : base (Options)
+        // Método para configurar opções do contexto, como a string de conexão.
+        //Este override está sobrescrevendo o método onConfiguring
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            
-        }
-
-        //OnConfigurimg = Possui a configuracao para a configuracao do banco de dados
-
-        protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder)
-        {
-            //colocar as informacoes do banco de dados 
-            //
+            // Verifica se as opções já foram configuradas; se não, configura.
             if (!optionsBuilder.IsConfigured)
-            {     // User ID e Passawoerd Sao informacoes de acesso ao servidor do banco de dados 
-               optionsBuilder.UseSqlServer(
-               @"Data Source=DESKTOP-16UD9N2\\RIKELMESILVA; 
+            {
+                // Configuração do SQL Server com a string de conexão especificada.
+                // Inclui opções como segurança integrada e certificado de confiança.
+                optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-16UD9N2\\RIKELMESILVA; 
                Initial Catalog = Bibliotec_mvc; 
-               User Id=sa; 
-               Passaword= ;           
+               User Id=RIKELMESQL; 
+               Passaword= 123;           
                Integrated Security=true; 
                TrustServerCertificate = true");
-                  
             }
-
-            Public DbSet<Categoria> Categoria { get; set;} 
-
-            Public DbSet<Livro> Livro { get; set;}    
-
-            Public DbSet<Usuario> Usuario { get; set;}  
-
-            Public DbSet<LivroCategoria> LivroCategoria { get; set;}  
-
-            Public DbSet<LivroReserva> LivroReserva { get; set;}    
-            
-            
         }
 
+        // Propriedades que representam tabelas no banco de dados.
+        // Cada DbSet corresponde a uma entidade (classe) que será mapeada para o banco.
+        public DbSet<Curso> Curso { get; set; }
+        public DbSet<Livro> Livro { get; set; }
+        public DbSet<Categoria> Categoria { get; set; }
+        public DbSet<Usuário> Usuario { get; set; }
+        public DbSet<LivroCategoria> LivroCategoria { get; set; }
+        public DbSet<LivroReserva> LivroReserva { get; set; }
+        // public DbSet<LivroFavorito> LivroFavorito { get; set; }
 
     }
 }
+
+
+
