@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bibliotec.Models
 {
-    public class Usuário
+    public class Usuario
     {
         [Key]
         public int UsuarioID;
